@@ -3,61 +3,120 @@
 import Link from "next/link";
 import { useRef } from "react";
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import Orb from "./Orb";
 
-gsap.registerPlugin(useGSAP);
+gsap.registerPlugin(ScrollTrigger, useGSAP);
 
+/**
+ * Act I — one pinned cinematic take on the real living room (dim-room.png):
+ *   beat 1  the promise, room warm and crisp
+ *   beat 2  the room warps, ambers, a scotoma swallows the center — the fear
+ *   beat 3  the fact: this is how 10 million Americans see
+ */
 export default function Hero() {
   const ref = useRef<HTMLElement>(null);
 
   useGSAP(
     () => {
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (reduced) return;
+
       gsap
         .timeline({ defaults: { ease: "power3.out" } })
-        .from("[data-hero-line]", { yPercent: 110, duration: 1, stagger: 0.12 }, 0.15)
-        .from("[data-hero-fade]", { autoAlpha: 0, y: 24, duration: 0.8, stagger: 0.1 }, 0.7);
+        .from("[data-hero-line]", { yPercent: 110, duration: 1, stagger: 0.12 }, 0.2)
+        .from("[data-hero-fade]", { autoAlpha: 0, y: 24, duration: 0.8, stagger: 0.1 }, 0.8);
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: ref.current,
+          start: "top top",
+          end: "bottom bottom",
+          scrub: 1,
+        },
+      });
+
+      tl
+        // beat 1 → 2: promise exits, the room begins to fail
+        .to("[data-beat-promise]", { autoAlpha: 0, y: -50, duration: 0.5 }, 0.35)
+        .to("[data-warp-map]", { attr: { scale: 44 }, ease: "none", duration: 1.6 }, 0.4)
+        // darken via overlay — tweening the filter string would corrupt url(#amd-warp)
+        .to("[data-hero-dim]", { opacity: 0.55, ease: "none", duration: 1.6 }, 0.4)
+        .to("[data-hero-amber]", { opacity: 0.85, ease: "none", duration: 1.4 }, 0.5)
+        .to("[data-hero-scotoma]", { opacity: 1, scale: 1.3, ease: "none", duration: 1.4 }, 0.7)
+        .fromTo("[data-beat-fear]", { autoAlpha: 0, y: 40 }, { autoAlpha: 1, y: 0, duration: 0.5 }, 1.1)
+        // beat 2 → 3: the fact lands
+        .to("[data-beat-fear]", { autoAlpha: 0, y: -40, duration: 0.4 }, 1.9)
+        .fromTo("[data-beat-fact]", { autoAlpha: 0, y: 40 }, { autoAlpha: 1, y: 0, duration: 0.5 }, 2.2);
     },
     { scope: ref },
   );
 
   return (
-    <section ref={ref} className="hero" aria-label="Introduction">
-      <div className="hero-inner">
-        <div className="hero-copy">
-          <p className="eyebrow eyebrow-light" data-hero-fade>
-            Peer-reviewed · 365 eyes studied
-          </p>
-          <h1 className="hero-h1">
-            <span className="hero-line"><span data-hero-line>Your Macula</span></span>
-            <span className="hero-line"><span data-hero-line>Can <em>Heal.</em></span></span>
-          </h1>
-          <p className="hero-lead" data-hero-fade>
-            <span className="accent-light">The science proves it.</span> A comprehensive
-            functional-medicine approach to macular degeneration — built on 15 years of research
-            and published clinical results.
-          </p>
-          <div className="hero-cta" data-hero-fade>
-            <Link href="/blueprint" className="btn btn-primary">Get the Free Guide →</Link>
-            <Link href="/checkout" className="btn btn-light">Book a Consultation</Link>
+    <section ref={ref} className="hero-track" aria-label="Introduction">
+      <svg width="0" height="0" aria-hidden="true">
+        <filter id="amd-warp">
+          <feTurbulence type="fractalNoise" baseFrequency="0.012 0.02" numOctaves="2" seed="4" result="n" />
+          <feDisplacementMap in="SourceGraphic" in2="n" data-warp-map scale="0" />
+        </filter>
+      </svg>
+
+      <div className="hero-stage">
+        <div className="hero-room" data-hero-room aria-hidden="true" />
+        <div className="hero-dim" data-hero-dim aria-hidden="true" />
+        <div className="hero-amber" data-hero-amber aria-hidden="true" />
+        <div className="hero-scotoma" data-hero-scotoma aria-hidden="true" />
+        <div className="hero-vignette" aria-hidden="true" />
+
+        {/* beat 1 — the promise */}
+        <div className="hero-beat" data-beat-promise>
+          <div className="hero-beat-inner">
+            <p className="eyebrow eyebrow-light" data-hero-fade>
+              Peer-reviewed · 365 eyes studied
+            </p>
+            <h1 className="hero-h1">
+              <span className="hero-line"><span data-hero-line>Your Macula</span></span>
+              <span className="hero-line"><span data-hero-line>Can <em>Heal.</em></span></span>
+            </h1>
+            <p className="hero-lead" data-hero-fade>
+              <span className="accent-light">The science proves it.</span> A comprehensive
+              functional-medicine approach to macular degeneration — built on 15 years of research
+              and published clinical results.
+            </p>
+            <div className="hero-cta" data-hero-fade>
+              <Link href="/blueprint" className="btn btn-primary">Get the Free Guide →</Link>
+              <Link href="/checkout" className="btn btn-light">Book a Consultation</Link>
+            </div>
+            <p className="scroll-hint" data-hero-fade aria-hidden="true">
+              Scroll — watch this room the way AMD sees it
+              <span className="scroll-hint-line" />
+            </p>
           </div>
         </div>
 
-        {/* landing pad #1 — the orb starts here, fully damaged */}
-        <div className="hero-orb-slot" data-orb-slot data-heal="0">
-          <Orb heal={0} className="orb-static" />
+        {/* beat 2 — the fear */}
+        <div className="hero-beat hero-beat-center" data-beat-fear>
+          <p className="eyebrow eyebrow-amber">This is macular degeneration</p>
+          <h2 className="scare-head">
+            The world doesn&apos;t go dark all at once.<br />
+            <span className="scare-amberword">It goes wavy. Amber. Then missing.</span>
+          </h2>
+          <p className="scare-sub">
+            Straight lines bend. Faces blur at the center. The words on a page dissolve exactly
+            where you look.
+          </p>
         </div>
-      </div>
 
-      <div className="hero-foot" data-hero-fade>
-        <span className="hero-ticker">
-          Hormones · Oxidative stress · Methylation · Inflammation · Nutrition · Epigenetics
-        </span>
-        <span className="scroll-hint" aria-hidden="true">
-          Scroll to see the science
-          <span className="scroll-hint-line" />
-        </span>
+        {/* beat 3 — the fact */}
+        <div className="hero-beat hero-beat-center" data-beat-fact>
+          <p className="eyebrow eyebrow-amber">Right now</p>
+          <h2 className="scare-head">
+            This is how <span className="scare-amberword">10 million Americans</span> see.
+          </h2>
+          <p className="scare-sub">
+            And the standard of care hasn&apos;t meaningfully changed in 25 years.
+          </p>
+        </div>
       </div>
     </section>
   );

@@ -19,12 +19,13 @@ const Cross = () => (
   </svg>
 );
 
-/* ══ 1 · THE UNMET NEED — editorial split, orb lands in the bento ══ */
+/* ══ THE UNMET NEED — editorial split ═══════════════════════════ */
 export function NeedSection() {
   const stats = [
-    { num: "1 in 17", desc: "Patients actually helped by standard AREDS vitamins" },
-    { num: "25 yrs", desc: "Since the standard of care has meaningfully changed" },
-    { num: "10M+", desc: "Americans currently living with macular degeneration" },
+    { num: "1 in 17", desc: "Patients actually helped by standard AREDS vitamins", up: false },
+    { num: "25 yrs", desc: "Since the standard of care has meaningfully changed", up: false },
+    { num: "10M+", desc: "Americans currently living with macular degeneration", up: false },
+    { num: "48%", desc: "Our patients who showed measurable vision improvement", up: true },
   ];
   return (
     <section id="about" className="section sec-soft">
@@ -49,26 +50,18 @@ export function NeedSection() {
 
         <Reveal delay={120} className="need-bento">
           {stats.map((s) => (
-            <div key={s.num} className="card stat-tile">
-              <span className="stat-num">{s.num}</span>
+            <div key={s.num} className="card stat-tile" style={s.up ? { background: "var(--pale)", borderColor: "var(--border-blue)" } : undefined}>
+              <span className={`stat-num${s.up ? " accent" : ""}`}>{s.up && <UpArrow />} {s.num}</span>
               <p className="stat-desc">{s.desc}</p>
             </div>
           ))}
-          {/* landing pad #2 — the first flicker of change */}
-          <div className="stat-tile orb-pad" data-orb-slot data-heal="0.25">
-            <Orb heal={0.25} className="orb-static" />
-            <div className="pad-caption">
-              <span className="stat-num accent"><UpArrow /> 48%</span>
-              <p className="stat-desc">Our patients who showed measurable vision improvement</p>
-            </div>
-          </div>
         </Reveal>
       </div>
     </section>
   );
 }
 
-/* ══ 2 · HOMING — six causes orbit the eye, orb lands center ══ */
+/* ══ HOMING — oversized editorial index rows ════════════════════ */
 export function HomingSection() {
   const pillars = [
     { l: "H", t: "Hormones", d: "DHEA declines with age and was directly linked to AMD in a 2007 study. We restore the hormones your macula depends on — based on your actual bloodwork, not guesswork." },
@@ -81,66 +74,44 @@ export function HomingSection() {
   return (
     <section id="homing" className="section sec-white">
       <div className="wide">
-        <Reveal className="sec-head">
-          <p className="eyebrow center">The solution</p>
+        <Reveal className="sec-head" style={{ textAlign: "left", marginInline: 0, maxWidth: 820 }}>
+          <p className="eyebrow">The solution</p>
           <h2 className="h2">
             The HOMING Protocol — <span className="accent">six root causes, one unified attack</span>
           </h2>
-          <p className="lead">
+          <p className="lead" style={{ marginInline: 0 }}>
             After 15 years of research and a peer-reviewed published study of 365 eyes, we identified
             the six biological pillars that drive macular degeneration. Address all six and your cells
             can stabilize — and often recover.
           </p>
         </Reveal>
 
-        <div className="homing-orbit">
-          <div className="homing-col">
-            {pillars.slice(0, 3).map((p, i) => (
-              <Reveal key={p.l} delay={i * 90}>
-                <article className="card pillar">
-                  <span className="homing-badge">{p.l}</span>
-                  <div>
-                    <h3>{p.t}</h3>
-                    <p>{p.d}</p>
-                  </div>
-                </article>
-              </Reveal>
-            ))}
-          </div>
-
-          {/* landing pad #3 — halfway healed, ringed by its six causes */}
-          <div className="homing-center orb-pad" data-orb-slot data-heal="0.55">
-            <Orb heal={0.55} className="orb-static" />
-          </div>
-
-          <div className="homing-col">
-            {pillars.slice(3).map((p, i) => (
-              <Reveal key={p.l} delay={i * 90}>
-                <article className="card pillar">
-                  <span className="homing-badge">{p.l}</span>
-                  <div>
-                    <h3>{p.t}</h3>
-                    <p>{p.d}</p>
-                  </div>
-                </article>
-              </Reveal>
-            ))}
-          </div>
+        <div className="homing-index" role="list">
+          {pillars.map((p, i) => (
+            <Reveal key={p.l} delay={(i % 2) * 80}>
+              <article className="homing-row" role="listitem">
+                <span className="homing-row-letter" aria-hidden="true">{p.l}</span>
+                <div className="homing-row-body">
+                  <h3>{p.t}</h3>
+                  <p>{p.d}</p>
+                </div>
+                <span className="homing-row-num" aria-hidden="true">0{i + 1}</span>
+              </article>
+            </Reveal>
+          ))}
         </div>
       </div>
     </section>
   );
 }
 
-/* ══ 3 · RESULTS — the payoff: orb arrives fully healed ══ */
+/* ══ RESULTS — healed orb centerpiece + full-width OCT strip ════ */
 export function ResultsSection() {
-  const left = [
+  const stats = [
     { num: "48%", desc: "of patients showed measurable vision improvement", up: true },
     { num: "95%", desc: "of patients achieved stable or improving vision", up: true },
-  ];
-  const right = [
-    { num: "365", desc: "eyes studied in our published clinical research" },
-    { num: "15+", desc: "years developing and validating the HOMING Protocol" },
+    { num: "365", desc: "eyes studied in our published clinical research", up: false },
+    { num: "15+", desc: "years developing and validating the HOMING Protocol", up: false },
   ];
   const scans = [
     "Dramatic retinal smoothing documented over 2 years (2021–2023)",
@@ -164,7 +135,7 @@ export function ResultsSection() {
 
         <div className="results-stage">
           <div className="results-col">
-            {left.map((s) => (
+            {stats.slice(0, 2).map((s) => (
               <Reveal key={s.num}>
                 <div className="card stat-tile">
                   <span className="stat-num accent">{s.up && <UpArrow />} {s.num}</span>
@@ -173,15 +144,12 @@ export function ResultsSection() {
               </Reveal>
             ))}
           </div>
-
-          {/* landing pad #4 — fully healed. The promise, kept. */}
-          <div className="results-center orb-pad" data-orb-slot data-heal="1">
+          <div className="results-center">
             <Orb heal={1} className="orb-static" />
             <p className="pad-note">Restored macular profile — as documented on OCT</p>
           </div>
-
           <div className="results-col">
-            {right.map((s) => (
+            {stats.slice(2).map((s) => (
               <Reveal key={s.num}>
                 <div className="card stat-tile">
                   <span className="stat-num">{s.num}</span>
@@ -191,30 +159,37 @@ export function ResultsSection() {
             ))}
           </div>
         </div>
+      </div>
 
-        <Reveal className="sec-head" style={{ marginTop: "clamp(3rem, 6vw, 5rem)" }}>
+      {/* OCT scans — full-bleed strip */}
+      <div className="oct-strip-head">
+        <Reveal className="sec-head" style={{ marginBottom: "2rem" }}>
           <p className="eyebrow center">Documented OCT scan improvements</p>
           <h3 className="h3">Real patients. Real scans. Real improvement.</h3>
         </Reveal>
-        <div className="oct-row">
-          {scans.map((caption, i) => (
-            <Reveal key={i} delay={(i % 4) * 80}>
-              <figure className="card oct-card">
-                <div className="oct-visual">
-                  <Scan size={110} healed />
-                  <span className="oct-tag">OCT · {i + 1}</span>
-                </div>
-                <figcaption>{caption}</figcaption>
-              </figure>
-            </Reveal>
-          ))}
-        </div>
+      </div>
+      <div className="oct-strip">
+        {scans.map((caption, i) => (
+          <Reveal key={i} delay={(i % 4) * 80}>
+            <figure className="oct-panel">
+              <div
+                className="oct-visual"
+                style={{ backgroundImage: `url(/oct-${i + 1}.png)` }}
+                role="img"
+                aria-label={`OCT retinal scan comparison ${i + 1}`}
+              >
+                <span className="oct-tag">OCT · 0{i + 1}</span>
+              </div>
+              <figcaption>{caption}</figcaption>
+            </figure>
+          </Reveal>
+        ))}
       </div>
     </section>
   );
 }
 
-/* ══ 4 · TESTIMONIALS — dark band ══ */
+/* ══ TESTIMONIALS — dark band ═══════════════════════════════════ */
 export function TestimonialsSection() {
   const items = [
     { quote: "My ophthalmologist was astonished. He said he had never seen this kind of improvement in his entire career. I maintained 20/20 vision and significantly reduced wavy lines.", name: "Patient", cond: "Dry AMD — Both Eyes" },
@@ -257,7 +232,7 @@ export function TestimonialsSection() {
   );
 }
 
-/* ══ 5 · DR. ROZAKIS ══ */
+/* ══ DR. ROZAKIS ════════════════════════════════════════════════ */
 export function DoctorSection() {
   const badges = ["Duke Eye Center", "LASIK Innovator", "AMD Researcher", "Peer-Reviewed Author"];
   return (
@@ -299,7 +274,7 @@ export function DoctorSection() {
   );
 }
 
-/* ══ 6 · VS COMPARISON ══ */
+/* ══ VS COMPARISON ══════════════════════════════════════════════ */
 export function CompareSection() {
   const standard = [
     "AREDS vitamins — same for every patient",
@@ -356,7 +331,7 @@ export function CompareSection() {
   );
 }
 
-/* ══ 7 · GUIDE SELECTOR ══ */
+/* ══ GUIDE SELECTOR — 3×2 ═══════════════════════════════════════ */
 export function GuideSection() {
   const cards = [
     { n: "01", t: "Family History", s: "Prevention before diagnosis — reduce your risk now", href: "/blueprint?type=family_history" },
@@ -393,14 +368,13 @@ export function GuideSection() {
   );
 }
 
-/* ══ 8 · FINAL CTA — the orb re-emerges, healed, as the emblem ══ */
+/* ══ FINAL CTA — the healed emblem ══════════════════════════════ */
 export function FinalCTA() {
   return (
     <section className="section sec-dark final-cta">
       <div className="final-orb-glow" aria-hidden="true" />
       <div className="wide final-inner">
-        {/* landing pad #5 — re-emergence, gold */}
-        <div className="final-orb-slot orb-pad" data-orb-slot data-heal="1" data-orb-gap="far">
+        <div className="final-orb-slot">
           <Orb heal={1} className="orb-static" />
         </div>
         <Reveal className="final-copy">
