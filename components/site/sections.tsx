@@ -174,7 +174,7 @@ export function ResultsSection() {
             <figure className="oct-panel">
               <div
                 className="oct-visual"
-                style={{ backgroundImage: `url(/oct-${i + 1}.png)` }}
+                style={{ backgroundImage: `url(/oct-${i + 1}.webp)` }}
                 role="img"
                 aria-label={`OCT retinal scan comparison ${i + 1}`}
               >
@@ -191,11 +191,12 @@ export function ResultsSection() {
 
 /* ══ TESTIMONIALS — dark band ═══════════════════════════════════ */
 export function TestimonialsSection() {
+  // real quotes from the recorded patient interviews (public/testimonials transcripts)
   const items = [
-    { quote: "My ophthalmologist was astonished. He said he had never seen this kind of improvement in his entire career. I maintained 20/20 vision and significantly reduced wavy lines.", name: "Patient", cond: "Dry AMD — Both Eyes" },
     { quote: "I was having almost a fishbowl effect out of my right eye. Within three months, the distortion was easing greatly. Within six months it was completely gone and my eyesight was crystal clear.", name: "Patty", cond: "Wet AMD — Featured on Cleveland News" },
-    { quote: "I had been getting shots every eight weeks. After the program, my retina doctor started saying the fluid was reducing. The interval between injections got longer. It changed everything.", name: "Patient", cond: "Wet AMD — Injection Support" },
-    { quote: "My doctor had told me there was nothing more to do. Then I found Dr. Rozakis. My scans improved over 2 years in ways my ophthalmologist had never seen before.", name: "Patient", cond: "Dry AMD — 2-Year Follow-up" },
+    { quote: "My doctor compared the scans and said it looked like two different patients. He said whatever you're doing, keep doing it. I'm a nurse practitioner — I understood the scans. It felt like a miracle.", name: "Muriel", cond: "Wet AMD — Nurse Practitioner" },
+    { quote: "My last visit with the Retina Clinic — they don't see a problem with macular degeneration. When I do the grid, I don't have any loss of vision, no lines that are irregular. I'm a happy camper.", name: "Margaret", cond: "Dry AMD — St. Louis" },
+    { quote: "I've been a veterinarian for 51 years. The black spots I see when I wake up seem to be about half the size they were. I paid attention for days to make sure I wasn't imagining it. I feel stronger and healthier.", name: "Jim", cond: "Dry AMD — Veterinarian" },
   ];
   return (
     <section className="section sec-dark">
