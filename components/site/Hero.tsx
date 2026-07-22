@@ -9,10 +9,10 @@ import { useGSAP } from "@gsap/react";
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 /**
- * Act I — one pinned cinematic take on the real living room (dim-room.png):
- *   beat 1  the promise, room warm and crisp
- *   beat 2  the room warps, ambers, a scotoma swallows the center — the fear
- *   beat 3  the fact: this is how 10 million Americans see
+ * Act I — split stage. Copy lives in a solid navy panel on the left (always
+ * legible, per CEO); the real living room warps on the right. The distortion
+ * gets a long solo before any copy arrives, and the whole take breathes over
+ * 550vh of scroll.
  */
 export default function Hero() {
   const ref = useRef<HTMLElement>(null);
@@ -37,17 +37,17 @@ export default function Hero() {
       });
 
       tl
-        // beat 1 → 2: promise exits, the room begins to fail
-        .to("[data-beat-promise]", { autoAlpha: 0, y: -50, duration: 0.5 }, 0.35)
-        .to("[data-warp-map]", { attr: { scale: 44 }, ease: "none", duration: 1.6 }, 0.4)
-        // darken via overlay — tweening the filter string would corrupt url(#amd-warp)
-        .to("[data-hero-dim]", { opacity: 0.55, ease: "none", duration: 1.6 }, 0.4)
-        .to("[data-hero-amber]", { opacity: 0.85, ease: "none", duration: 1.4 }, 0.5)
-        .to("[data-hero-scotoma]", { opacity: 1, scale: 1.3, ease: "none", duration: 1.4 }, 0.7)
-        .fromTo("[data-beat-fear]", { autoAlpha: 0, y: 40 }, { autoAlpha: 1, y: 0, duration: 0.5 }, 1.1)
-        // beat 2 → 3: the fact lands
-        .to("[data-beat-fear]", { autoAlpha: 0, y: -40, duration: 0.4 }, 1.9)
-        .fromTo("[data-beat-fact]", { autoAlpha: 0, y: 40 }, { autoAlpha: 1, y: 0, duration: 0.5 }, 2.2);
+        // the promise steps aside…
+        .to("[data-beat-promise]", { autoAlpha: 0, y: -50, duration: 0.5 }, 0.6)
+        // …then the room fails SLOWLY — a long wordless stretch first
+        .to("[data-warp-map]", { attr: { scale: 44 }, ease: "none", duration: 2.4 }, 0.7)
+        .to("[data-hero-dim]", { opacity: 0.55, ease: "none", duration: 2.2 }, 0.9)
+        .to("[data-hero-amber]", { opacity: 0.85, ease: "none", duration: 2.0 }, 1.0)
+        .to("[data-hero-scotoma]", { opacity: 1, scale: 1.3, ease: "none", duration: 1.8 }, 1.4)
+        // copy arrives only after the distortion has been felt
+        .fromTo("[data-beat-fear]", { autoAlpha: 0, y: 40 }, { autoAlpha: 1, y: 0, duration: 0.6 }, 2.5)
+        .to("[data-beat-fear]", { autoAlpha: 0, y: -40, duration: 0.5 }, 3.6)
+        .fromTo("[data-beat-fact]", { autoAlpha: 0, y: 40 }, { autoAlpha: 1, y: 0, duration: 0.6 }, 4.0);
     },
     { scope: ref },
   );
@@ -62,15 +62,17 @@ export default function Hero() {
       </svg>
 
       <div className="hero-stage">
-        <div className="hero-room" data-hero-room aria-hidden="true" />
-        <div className="hero-dim" data-hero-dim aria-hidden="true" />
-        <div className="hero-amber" data-hero-amber aria-hidden="true" />
-        <div className="hero-scotoma" data-hero-scotoma aria-hidden="true" />
-        <div className="hero-vignette" aria-hidden="true" />
+        {/* right: the room that fails */}
+        <div className="hero-scene" aria-hidden="true">
+          <div className="hero-room" data-hero-room />
+          <div className="hero-dim" data-hero-dim />
+          <div className="hero-amber" data-hero-amber />
+          <div className="hero-scotoma" data-hero-scotoma />
+        </div>
 
-        {/* beat 1 — the promise */}
-        <div className="hero-beat" data-beat-promise>
-          <div className="hero-beat-inner">
+        {/* left: solid panel — copy is always on solid color */}
+        <div className="hero-panel">
+          <div className="hero-beat" data-beat-promise>
             <p className="eyebrow eyebrow-light" data-hero-fade>
               Peer-reviewed · 365 eyes studied
             </p>
@@ -88,34 +90,32 @@ export default function Hero() {
               <Link href="/checkout" className="btn btn-light">Book a Consultation</Link>
             </div>
             <p className="scroll-hint" data-hero-fade aria-hidden="true">
-              Scroll — watch this room the way AMD sees it
+              Scroll — watch the room the way AMD sees it
               <span className="scroll-hint-line" />
             </p>
           </div>
-        </div>
 
-        {/* beat 2 — the fear */}
-        <div className="hero-beat hero-beat-center" data-beat-fear>
-          <p className="eyebrow eyebrow-amber">This is macular degeneration</p>
-          <h2 className="scare-head">
-            The world doesn&apos;t go dark all at once.<br />
-            <span className="scare-amberword">It goes wavy. Amber. Then missing.</span>
-          </h2>
-          <p className="scare-sub">
-            Straight lines bend. Faces blur at the center. The words on a page dissolve exactly
-            where you look.
-          </p>
-        </div>
+          <div className="hero-beat" data-beat-fear>
+            <p className="eyebrow eyebrow-amber">This is macular degeneration</p>
+            <h2 className="scare-head">
+              The world doesn&apos;t go dark all at once.{" "}
+              <span className="scare-amberword">It goes wavy. Amber. Then missing.</span>
+            </h2>
+            <p className="scare-sub">
+              Straight lines bend. Faces blur at the center. The words on a page dissolve exactly
+              where you look.
+            </p>
+          </div>
 
-        {/* beat 3 — the fact */}
-        <div className="hero-beat hero-beat-center" data-beat-fact>
-          <p className="eyebrow eyebrow-amber">Right now</p>
-          <h2 className="scare-head">
-            This is how <span className="scare-amberword">10 million Americans</span> see.
-          </h2>
-          <p className="scare-sub">
-            And the standard of care hasn&apos;t meaningfully changed in 25 years.
-          </p>
+          <div className="hero-beat" data-beat-fact>
+            <p className="eyebrow eyebrow-amber">Right now</p>
+            <h2 className="scare-head">
+              This is how <span className="scare-amberword">10 million Americans</span> see.
+            </h2>
+            <p className="scare-sub">
+              And the standard of care hasn&apos;t meaningfully changed in 25 years.
+            </p>
+          </div>
         </div>
       </div>
     </section>
