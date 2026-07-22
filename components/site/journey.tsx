@@ -110,22 +110,22 @@ export function LifeSection() {
 
       scenes.forEach((scene, i) => {
         const at = 1 + i * 1.5;
-        // first scene arrives still amber-blurred and CLEARS — vision returning
+        // scenes FLY IN through real depth — camera catches them mid-air
+        // (no filter here: a filter would flatten the preserve-3d planes)
         tl.fromTo(
           scene,
-          i === 0
-            ? { autoAlpha: 0, scale: 1.08, filter: "blur(16px) sepia(0.8) brightness(0.7)" }
-            : { autoAlpha: 0, scale: 1.08 },
-          { autoAlpha: 1, scale: 1, filter: "blur(0px) sepia(0) brightness(1)", duration: 0.8 },
+          { autoAlpha: 0, z: -420 },
+          { autoAlpha: 1, z: 0, ease: "power1.out", duration: 0.8 },
           at,
         );
-        // depth parallax: each plane drifts at its own speed across the scene's span
+        // plane depth: bg sits behind, fg floats in front — true 3D parallax
         scene.querySelectorAll<HTMLElement>("[data-depth]").forEach((layer) => {
           const d = Number(layer.dataset.depth ?? 0.5);
+          gsap.set(layer, { z: (d - 0.6) * 280, scale: 1 - (d - 0.6) * 0.22 });
           tl.fromTo(layer, { yPercent: d * 7 }, { yPercent: d * -7, ease: "none", duration: 1.95 }, at);
         });
         if (i < scenes.length - 1) {
-          tl.to(scene, { autoAlpha: 0, scale: 0.98, duration: 0.6 }, at + 1.35);
+          tl.to(scene, { autoAlpha: 0, z: 260, ease: "power1.in", duration: 0.6 }, at + 1.35);
         }
       });
 

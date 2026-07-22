@@ -136,6 +136,28 @@ img, svg, video { display: block; max-width: 100%; }
 .orb-halo-blue { background: radial-gradient(circle, rgba(41,171,226,0.4), transparent 62%); filter: blur(26px); }
 .orb-halo-gold { background: radial-gradient(circle, rgba(244,185,66,0.48), rgba(41,171,226,0.28) 46%, transparent 66%); filter: blur(32px); }
 
+/* ── the spark — traveling light, hero → tunnel → life → results ─ */
+.spark {
+  position: fixed; top: 0; left: 0; z-index: 55;
+  width: 120px; height: 120px; pointer-events: none;
+  visibility: hidden; will-change: transform;
+  mix-blend-mode: screen; /* lights whatever passes beneath it */
+}
+.spark-inner { position: absolute; inset: 0; }
+.spark-core {
+  position: absolute; inset: 30%; border-radius: 50%;
+  background: radial-gradient(circle, #fffdf4 0%, #ffe9ad 38%, rgba(244, 185, 66, 0.65) 62%, transparent 78%);
+  filter: blur(1px);
+}
+.spark-halo {
+  position: absolute; inset: 0; border-radius: 50%;
+  background: radial-gradient(circle, rgba(244, 185, 66, 0.5) 0%, rgba(41, 171, 226, 0.28) 48%, transparent 70%);
+  filter: blur(10px);
+  animation: spark-breathe 2.6s ease-in-out infinite;
+}
+@keyframes spark-breathe { 0%, 100% { transform: scale(1); opacity: 0.85; } 50% { transform: scale(1.15); opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .spark { display: none; } .spark-halo { animation: none; } }
+
 /* ══════════════════════════════════════════════════════════════
    SECTIONS
    ══════════════════════════════════════════════════════════════ */
@@ -268,10 +290,10 @@ img, svg, video { display: block; max-width: 100%; }
    HERO / ACT I — the real room, crisp → wavy amber missing (pinned)
    ══════════════════════════════════════════════════════════════ */
 .hero-track { position: relative; height: 550vh; background: var(--navy); }
-.hero-stage { position: sticky; top: 0; height: 100vh; overflow: hidden; }
+.hero-stage { position: sticky; top: 0; height: 100vh; overflow: hidden; perspective: 1200px; }
 
-/* the failing room — full bleed */
-.hero-scene { position: absolute; inset: 0; overflow: hidden; }
+/* the failing room — full bleed; the camera dollies INTO it on scroll */
+.hero-scene { position: absolute; inset: 0; overflow: hidden; transform-origin: 58% 44%; will-change: transform; }
 .hero-room {
   /* half-resolution box scaled 2× — the displacement filter computes on ¼ of
      the pixels (major scroll-perf win); softness is invisible under the warp */
@@ -373,7 +395,8 @@ img, svg, video { display: block; max-width: 100%; }
    ══════════════════════════════════════════════════════════════ */
 /* one continuous pinned take: header → scene flows into scene */
 .life-track { position: relative; height: 780vh; background: var(--white); }
-.life-stage { position: sticky; top: 0; height: 100vh; overflow: hidden; display: grid; place-items: center; }
+.life-stage { position: sticky; top: 0; height: 100vh; overflow: hidden; display: grid; place-items: center; perspective: 1100px; }
+.life-scene, .life-scenes { transform-style: preserve-3d; }
 .life-head { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; padding: 1.5rem; z-index: 2; margin: auto; }
 .life-scenes { position: absolute; inset: 0; }
 .life-scene { position: absolute; inset: 0; margin: 0; opacity: 0; will-change: transform, opacity, filter; }
@@ -461,9 +484,9 @@ img, svg, video { display: block; max-width: 100%; }
    ══════════════════════════════════════════════════════════════ */
 /* dark glass once scrolled — legible over both light and dark sections */
 .nav { position: fixed; inset: 0 0 auto; z-index: 60; transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease; }
-.nav-over  { background: linear-gradient(to bottom, rgba(4, 10, 17, 0.82) 0%, rgba(4, 10, 17, 0.4) 65%, transparent 100%); border-bottom: 1px solid transparent; }
+.nav-over  { background: linear-gradient(to bottom, rgba(4, 10, 17, 0.82) 0%, rgba(4, 10, 17, 0.4) 65%, transparent 100%); }
 .nav-over .nav-link { text-shadow: 0 1px 10px rgba(4, 10, 17, 0.8); }
-.nav-solid { background: rgba(6, 16, 24, 0.78); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,0.08); box-shadow: 0 2px 24px rgba(2,8,16,0.3); }
+.nav-solid { background: rgba(6, 16, 24, 0.78); backdrop-filter: blur(16px); } /* no border/shadow — reads as a line over the hero */
 .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 80px; }
 .nav-logo  { display: inline-flex; align-items: center; gap: 0.6rem; font-weight: 800; font-size: 1.05rem; letter-spacing: 0.01em; text-decoration: none; color: #fff !important; }
 .nav-links { display: flex; align-items: center; gap: 2.25rem; }

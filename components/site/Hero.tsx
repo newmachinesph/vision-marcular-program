@@ -37,6 +37,8 @@ export default function Hero() {
       });
 
       tl
+        // camera dollies into the room across the whole take — the "3D-ing in"
+        .fromTo(".hero-scene", { scale: 1, z: 0 }, { scale: 1.24, z: 90, ease: "none", duration: 4.4 }, 0.2)
         // the promise steps aside…
         .to("[data-beat-promise]", { autoAlpha: 0, y: -50, duration: 0.5 }, 0.6)
         // …then the room fails SLOWLY — a long wordless stretch first
