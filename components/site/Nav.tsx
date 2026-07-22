@@ -18,7 +18,7 @@ function Logo({ light }: { light?: boolean }) {
         <circle cx="16" cy="11" r="4" fill="var(--blue)" />
         <circle cx="16" cy="11" r="2" fill={light ? "#061018" : "#fff"} />
       </svg>
-      Macular<span style={{ color: "var(--blue)" }}>Program</span>™
+      <span>Macular<span style={{ color: "var(--blue)" }}>Program</span>™</span>
     </span>
   );
 }

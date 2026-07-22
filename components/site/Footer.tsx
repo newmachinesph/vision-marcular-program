@@ -50,7 +50,7 @@ export default function Footer() {
               <circle cx="16" cy="11" r="4" fill="var(--blue)" />
               <circle cx="16" cy="11" r="2" fill="#061018" />
             </svg>
-            Macular<span style={{ color: "var(--blue)" }}>Program</span>™
+            <span>Macular<span style={{ color: "var(--blue)" }}>Program</span>™</span>
           </span>
           <p style={{ color: "#c2d0d6", fontSize: "0.95rem", lineHeight: 1.7, maxWidth: 240, marginTop: "1rem" }}>
             A functional medicine approach to macular degeneration, backed by peer-reviewed research.

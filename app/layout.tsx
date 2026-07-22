@@ -1,17 +1,10 @@
 import type { Metadata } from "next";
-import { Fraunces, Inter } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 
 const SITE_URL = "https://macularprogram.com";
 const SITE_NAME = "Macular Program™";
 const OG_IMAGE = `${SITE_URL}/og-image.png`;
-
-const fraunces = Fraunces({
-  variable: "--font-fraunces",
-  subsets: ["latin"],
-  display: "swap",
-  axes: ["opsz"],
-});
 
 const inter = Inter({
   variable: "--font-inter",
@@ -81,7 +74,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${fraunces.variable} ${inter.variable}`}>
+    <html lang="en" className={inter.variable}>
       <body>
         <script
           type="application/ld+json"
