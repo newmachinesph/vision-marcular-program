@@ -72,7 +72,7 @@ img, svg, video { display: block; max-width: 100%; }
 .section { position: relative; padding-block: clamp(5rem, 10vw, 9.5rem); content-visibility: auto; contain-intrinsic-size: auto 900px; }
 .sec-white { background: var(--white); }
 .sec-soft  { background: var(--soft); }
-.sec-dark  { background: linear-gradient(160deg, #081726 0%, var(--navy) 70%); color: #e8f1f6; }
+.sec-dark  { background: linear-gradient(160deg, #081726 0%, var(--navy) 70%); color: #e8f1f6; content-visibility: visible; } /* skip-render on dark bands flashes the white body bg */
 
 .sec-head { max-width: 880px; margin: 0 auto clamp(2.75rem, 5.5vw, 4.5rem); text-align: center; }
 .sec-head .h2 { margin: 1rem 0 1.25rem; }
