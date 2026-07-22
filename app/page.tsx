@@ -1,7 +1,7 @@
 import Nav from "@/components/site/Nav";
 import Hero from "@/components/site/Hero";
-import OrbTravel from "@/components/site/OrbTravel";
 import Footer from "@/components/site/Footer";
+import { TunnelSection, LifeSection, ReelsSection } from "@/components/site/journey";
 import {
   NeedSection,
   HomingSection,
@@ -18,12 +18,18 @@ export default function HomePage() {
     <>
       <Nav />
       <main className="page">
-        {/* one orb travels the whole page, landing pad to landing pad, healing */}
-        <OrbTravel />
+        {/* Act I — the promise, then the room fails (pinned, real photography) */}
         <Hero />
+
+        {/* Act II — through the center, back to light */}
+        <TunnelSection />
+        <LifeSection />
+
+        {/* Act III — the problem, the process, the proof */}
         <NeedSection />
         <HomingSection />
         <ResultsSection />
+        <ReelsSection />
         <TestimonialsSection />
         <DoctorSection />
         <CompareSection />
