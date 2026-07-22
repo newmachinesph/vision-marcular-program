@@ -291,7 +291,9 @@ body.orb-travel-on .orb-pad .orb-static { visibility: hidden; }
 .compare-row-ink p { color: var(--ink); }
 
 /* 7 · guides */
-.guide-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.15rem; }
+.guide-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.15rem; } /* 3×2 */
+@media (max-width: 1023px) { .guide-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px)  { .guide-grid { grid-template-columns: 1fr; } }
 .guide-card { display: block; padding: 2rem; text-decoration: none; height: 100%; }
 .guide-num { font-size: 0.72rem; font-weight: 800; color: var(--blue-deep); letter-spacing: 0.14em; text-transform: uppercase; }
 .guide-card h3 { font-size: 1.3rem; margin: 0.6rem 0 0.4rem; color: var(--ink); }
