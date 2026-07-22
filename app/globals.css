@@ -86,6 +86,7 @@ img, svg, video { display: block; max-width: 100%; }
 }
 .eyebrow.center { justify-content: center; }
 .eyebrow-light { color: #6fd0f6; }
+.eyebrow-white { color: #fff; text-shadow: 0 2px 16px rgba(6,16,24,0.7); }
 
 .h2 { font-size: var(--fs-h2); line-height: 1.05; color: var(--ink); }
 .h2-light { color: #f2f7fa; }
