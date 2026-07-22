@@ -1,5 +1,6 @@
 import Nav from "@/components/site/Nav";
 import Hero from "@/components/site/Hero";
+import Spark from "@/components/site/Spark";
 import Footer from "@/components/site/Footer";
 import { TunnelSection, LifeSection, ReelsSection } from "@/components/site/journey";
 import {
@@ -18,6 +19,9 @@ export default function HomePage() {
     <>
       <Nav />
       <main className="page">
+        {/* the spark — one light travels the whole story */}
+        <Spark />
+
         {/* Act I — the promise, then the room fails (pinned, real photography) */}
         <Hero />
 
