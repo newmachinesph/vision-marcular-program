@@ -1,6 +1,5 @@
 import Link from "next/link";
 import Reveal from "./Reveal";
-import Scan from "./Scan";
 import Orb from "./Orb";
 
 const UpArrow = () => (
@@ -241,9 +240,14 @@ export function DoctorSection() {
       <div className="wide doctor-grid">
         <Reveal className="doctor-photo-wrap">
           <div className="doctor-photo">
-            {/* Swap for a real portrait: /public/dr-rozakis.jpg as background */}
-            <span className="doctor-monogram">GR</span>
-            <Scan size={140} healed className="doctor-scan" />
+            {/* dummy portrait — replace with /public/dr-rozakis.jpg when supplied */}
+            <svg viewBox="0 0 300 400" width="100%" height="100%" role="img" aria-label="Portrait placeholder for Dr. George Rozakis, MD">
+              <rect width="300" height="400" fill="#0c2138" />
+              <circle cx="150" cy="150" r="62" fill="#3a5d7d" />
+              <path d="M150 224c-64 0-104 42-112 96v80h224v-80c-8-54-48-96-112-96z" fill="#e8eef4" />
+              <path d="M150 224c-26 0-46 8-62 20l30 136h64l30-136c-16-12-36-20-62-20z" fill="#274b6b" />
+              <rect x="143" y="250" width="14" height="70" rx="7" fill="#29abe2" />
+            </svg>
           </div>
         </Reveal>
         <Reveal delay={120}>
