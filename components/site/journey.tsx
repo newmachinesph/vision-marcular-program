@@ -55,7 +55,7 @@ export function TunnelSection() {
           <h2 className="tunnel-head">It doesn&apos;t have to end this way.</h2>
         </div>
         <div className="tunnel-copy" data-tunnel-copy-b>
-          <p className="eyebrow eyebrow-light">Come through the center</p>
+          <p className="eyebrow eyebrow-white">Come through the center</p>
           <h2 className="tunnel-head tunnel-head-light">Your cells can find their way back.</h2>
         </div>
       </div>
