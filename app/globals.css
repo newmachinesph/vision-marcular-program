@@ -70,7 +70,7 @@ img, svg, video { display: block; max-width: 100%; }
 .wide.narrow { max-width: 1180px; }
 .container { max-width: 1720px; margin-inline: auto; padding-inline: var(--gutter); }
 
-.section { position: relative; padding-block: clamp(5rem, 10vw, 9.5rem); }
+.section { position: relative; padding-block: clamp(5rem, 10vw, 9.5rem); content-visibility: auto; contain-intrinsic-size: auto 900px; }
 .sec-white { background: var(--white); }
 .sec-soft  { background: var(--soft); }
 .sec-dark  { background: linear-gradient(160deg, #081726 0%, var(--navy) 70%); color: #e8f1f6; }
@@ -270,13 +270,15 @@ img, svg, video { display: block; max-width: 100%; }
 .hero-track { position: relative; height: 400vh; background: var(--navy); }
 .hero-stage { position: sticky; top: 0; height: 100vh; overflow: hidden; }
 .hero-room {
-  position: absolute; inset: -2%;
+  /* half-resolution box scaled 2× — the displacement filter computes on ¼ of
+     the pixels (major scroll-perf win); softness is invisible under the warp */
+  position: absolute; top: -2%; left: -2%; width: 52%; height: 52%;
+  transform: scale(2); transform-origin: 0 0;
   background:
-    url("/dim-room.png") center / cover no-repeat,
+    url("/dim-room.webp") center / cover no-repeat,
     linear-gradient(160deg, #8a6d4b 0%, #6b5138 34%, #4a3a28 62%, #2c2318 100%);
   /* ponytail: Safari skips SVG filters on HTML — degrades to amber+dim only */
   filter: url(#amd-warp) brightness(1.12) saturate(1.05);
-  will-change: filter;
 }
 .hero-dim { position: absolute; inset: 0; opacity: 0; background: #0b0703; pointer-events: none; }
 .hero-amber {
@@ -328,7 +330,7 @@ img, svg, video { display: block; max-width: 100%; }
 .tunnel-bg-light {
   position: absolute; inset: 0; opacity: 0;
   background:
-    url("/tunnel-still.png") center / cover no-repeat,
+    url("/tunnel-still.webp") center / cover no-repeat,
     radial-gradient(80% 70% at 50% 50%, #fff8e8 0%, #cfe9f7 45%, #29abe2 100%);
 }
 .tunnel-rings { position: absolute; inset: 0; display: grid; place-items: center; }

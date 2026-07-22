@@ -170,8 +170,8 @@ export function LifeSection() {
                   style={{
                     backgroundImage:
                       l.suffix === "mid"
-                        ? `url(/life-${s.key}-mid.png), url(/life-${s.key}.png), var(--life-fallback)`
-                        : `url(/life-${s.key}-${l.suffix}.png)${l.suffix === "bg" ? ", var(--life-fallback)" : ""}`,
+                        ? `url(/life-${s.key}-mid.webp), url(/life-${s.key}.webp), var(--life-fallback)`
+                        : `url(/life-${s.key}-${l.suffix}.webp)${l.suffix === "bg" ? ", var(--life-fallback)" : ""}`,
                   }}
                   role={l.suffix === "mid" ? "img" : undefined}
                   aria-label={l.suffix === "mid" ? s.title : undefined}
@@ -191,13 +191,14 @@ export function LifeSection() {
 }
 
 /* ══ REELS — slow marquee of patient-story reels ════════════════ */
+// real patients from the recorded interview transcripts
 const REELS = [
-  { title: "“My ophthalmologist was astonished”", meta: "Dry AMD · 20/20 maintained", views: "24K" },
   { title: "Patty: the fishbowl effect, gone", meta: "Wet AMD · Cleveland News", views: "1.3M" },
-  { title: "Fewer injections, longer intervals", meta: "Wet AMD · Injection support", views: "92K" },
-  { title: "“Nothing more to do” — then this", meta: "Dry AMD · 2-year scans", views: "540K" },
-  { title: "Inside the HOMING Protocol", meta: "Dr. Rozakis explains", views: "76K" },
-  { title: "Reading the fine print again", meta: "Patient story", views: "18K" },
+  { title: "Muriel: “like two different patients”", meta: "Wet AMD · Nurse practitioner", views: "540K" },
+  { title: "Margaret: a clean grid after 2 years", meta: "Dry AMD · St. Louis", views: "92K" },
+  { title: "Jim: the black spots, half the size", meta: "Dry AMD · Veterinarian, 51 yrs", views: "76K" },
+  { title: "Barbara: “I can see again”", meta: "Early-onset AMD · Telemedicine", views: "24K" },
+  { title: "Inside the HOMING Protocol", meta: "Dr. Rozakis explains", views: "18K" },
 ];
 
 export function ReelsSection() {
