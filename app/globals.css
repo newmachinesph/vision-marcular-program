@@ -267,10 +267,10 @@ img, svg, video { display: block; max-width: 100%; }
    HERO / ACT I — the real room, crisp → wavy amber missing (pinned)
    ══════════════════════════════════════════════════════════════ */
 .hero-track { position: relative; height: 550vh; background: var(--navy); }
-.hero-stage { position: sticky; top: 0; height: 100vh; overflow: hidden; display: grid; grid-template-columns: minmax(420px, 44%) 1fr; }
+.hero-stage { position: sticky; top: 0; height: 100vh; overflow: hidden; }
 
-/* right: the failing room, contained to its own half */
-.hero-scene { position: relative; grid-column: 2; overflow: hidden; }
+/* the failing room — full bleed */
+.hero-scene { position: absolute; inset: 0; overflow: hidden; }
 .hero-room {
   /* half-resolution box scaled 2× — the displacement filter computes on ¼ of
      the pixels (major scroll-perf win); softness is invisible under the warp */
@@ -295,14 +295,15 @@ img, svg, video { display: block; max-width: 100%; }
   filter: blur(10px);
 }
 
-/* left: solid panel — copy never sits on the photograph */
-.hero-panel {
-  grid-column: 1; grid-row: 1; position: relative; z-index: 2;
-  background: var(--navy); border-right: 1px solid rgba(255, 255, 255, 0.07);
-}
+/* copy overlays the full-bleed room on a faded translucent backing */
+.hero-panel { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+.hero-panel a { pointer-events: auto; }
 .hero-beat {
   position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center;
-  padding: clamp(5.5rem, 10vh, 7rem) clamp(1.5rem, 4vw, 3.5rem) clamp(2rem, 5vh, 3rem);
+  padding: clamp(5.5rem, 10vh, 7rem) var(--gutter) clamp(2rem, 5vh, 3rem);
+  max-width: 780px;
+  /* the faded background: solid enough behind the words, dissolving outward */
+  background: linear-gradient(to right, rgba(4, 10, 17, 0.82) 0%, rgba(4, 10, 17, 0.62) 55%, transparent 100%);
 }
 .hero-beat + .hero-beat { opacity: 0; }
 .hero-h1 { font-size: clamp(2.6rem, 4.6vw, 4.9rem); line-height: 1; margin: 1.5rem 0 1.75rem; color: #fff; }
@@ -329,11 +330,8 @@ img, svg, video { display: block; max-width: 100%; }
 }
 
 @media (max-width: 1023px) {
-  /* stack: room on top, solid copy panel below — copy stays on solid color */
-  .hero-stage { grid-template-columns: 1fr; grid-template-rows: 40vh 60vh; }
-  .hero-scene { grid-column: 1; grid-row: 1; }
-  .hero-panel { grid-column: 1; grid-row: 2; border-right: 0; border-top: 1px solid rgba(255,255,255,0.07); }
-  .hero-beat { padding-top: 1.5rem; }
+  /* narrow screens: the faded backing covers the full width */
+  .hero-beat { max-width: none; background: linear-gradient(to top, rgba(4, 10, 17, 0.85) 0%, rgba(4, 10, 17, 0.6) 70%, rgba(4, 10, 17, 0.35) 100%); justify-content: flex-end; padding-bottom: clamp(2.5rem, 6vh, 4rem); }
 }
 
 /* ══════════════════════════════════════════════════════════════
