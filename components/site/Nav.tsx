@@ -36,7 +36,7 @@ export default function Nav() {
 
   return (
     <nav className={`nav ${solid ? "nav-solid" : "nav-over"}`} aria-label="Main navigation">
-      <div className="container nav-inner">
+      <div className="nav-inner">
         <Link href="/" aria-label="Macular Program home">
           <Logo light={!solid} />
         </Link>
