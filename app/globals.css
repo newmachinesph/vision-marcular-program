@@ -487,7 +487,7 @@ img, svg, video { display: block; max-width: 100%; }
 .nav-over  { background: linear-gradient(to bottom, rgba(4, 10, 17, 0.82) 0%, rgba(4, 10, 17, 0.4) 65%, transparent 100%); }
 .nav-over .nav-link { text-shadow: 0 1px 10px rgba(4, 10, 17, 0.8); }
 .nav-solid { background: rgba(6, 16, 24, 0.78); backdrop-filter: blur(16px); } /* no border/shadow — reads as a line over the hero */
-.nav-inner { display: flex; align-items: center; justify-content: space-between; height: 80px; }
+.nav-inner { display: flex; align-items: center; justify-content: space-between; height: 80px; max-width: 1920px; margin-inline: auto; padding-inline: var(--gutter); }
 .nav-logo  { display: inline-flex; align-items: center; gap: 0.6rem; font-weight: 800; font-size: 1.05rem; letter-spacing: 0.01em; text-decoration: none; color: #fff !important; }
 .nav-links { display: flex; align-items: center; gap: 2.25rem; }
 .nav-link { color: rgba(255,255,255,0.82); text-decoration: none; font-weight: 500; font-size: 0.98rem; transition: color 0.15s; }
