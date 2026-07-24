@@ -31,8 +31,11 @@ export default function Hero() {
         scrollTrigger: {
           trigger: ref.current,
           start: "top top",
-          end: "bottom bottom",
+          // stop a viewport short of the track end: that tail is a hold where the
+          // beats sit finished and the next panel rises over the still-pinned room
+          end: () => `+=${ref.current!.offsetHeight - window.innerHeight * 2}`,
           scrub: 1,
+          invalidateOnRefresh: true,
         },
       });
 
