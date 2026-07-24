@@ -18,8 +18,29 @@ const reduced = () =>
  * whole rise plays over the PREVIOUS section while that one is still pinned —
  * the outgoing scene never moves, the incoming one grows on top of it.
  */
-const riseIn = (el: string, trigger: Element | null) =>
+/**
+ * A pinned section plays out over its track MINUS a trailing viewport. That tail
+ * is the hold: the beats are finished and sitting still while the next panel
+ * rises over them. Without it a section is still animating when the next one
+ * starts climbing, and neither reads.
+ */
+const holdEnd = (track: HTMLElement | null) => () =>
+  `+=${(track?.offsetHeight ?? 0) - window.innerHeight * 2}`;
+
+const riseIn = (el: string, trigger: Element | null) => {
+  // the -108% lift pulls the panel into view a viewport early, so it would sit
+  // parked in the corner through the whole hold — fade it in as the rise starts
   gsap.fromTo(
+    el,
+    { autoAlpha: 0 },
+    {
+      autoAlpha: 1,
+      ease: "none",
+      scrollTrigger: { trigger, start: "top bottom", end: "top 80%", scrub: true },
+    },
+  );
+
+  return gsap.fromTo(
     el,
     // the stage's own bottom edge starts a full viewport BELOW the fold, so the
     // -108% lift is what keeps the shrunken panel sitting in the visible
@@ -33,6 +54,7 @@ const riseIn = (el: string, trigger: Element | null) =>
       scrollTrigger: { trigger, start: "top bottom", end: "top 2%", scrub: true },
     },
   );
+};
 
 /* ══ TUNNEL — fly through the center, toward the light ══════════ */
 export function TunnelSection() {
@@ -48,8 +70,9 @@ export function TunnelSection() {
         scrollTrigger: {
           trigger: ref.current,
           start: "top top",
-          end: "bottom bottom",
+          end: holdEnd(ref.current),
           scrub: 1,
+          invalidateOnRefresh: true,
         },
       });
       tl.fromTo(
@@ -137,6 +160,7 @@ export function LifeSection() {
         scrollTrigger: {
           trigger: ref.current,
           start: "top top",
+          // no hold — nothing rises over life, the page just resumes below it
           end: "bottom bottom",
           scrub: 1,
         },

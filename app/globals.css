@@ -289,7 +289,9 @@ img, svg, video { display: block; max-width: 100%; }
 /* ══════════════════════════════════════════════════════════════
    HERO / ACT I — the real room, crisp → wavy amber missing (pinned)
    ══════════════════════════════════════════════════════════════ */
-.hero-track { position: relative; height: 550vh; background: var(--navy); }
+/* +100vh over the animated length: the trailing viewport is the hold where the
+   tunnel rises over the finished, still-pinned room */
+.hero-track { position: relative; height: 650vh; background: var(--navy); }
 .hero-stage { position: sticky; top: 0; height: 100vh; overflow: hidden; perspective: 1200px; }
 
 /* the failing room — full bleed; the camera dollies INTO it on scroll */
@@ -362,7 +364,7 @@ img, svg, video { display: block; max-width: 100%; }
    ══════════════════════════════════════════════════════════════ */
 /* the track is transparent and starts 100vh early: the stage grows in over the
    still-pinned hero instead of a full-height slab sliding up and covering it */
-.tunnel-track { position: relative; height: 260vh; margin-top: -100vh; background: transparent; }
+.tunnel-track { position: relative; height: 360vh; margin-top: -100vh; background: transparent; }
 .tunnel-stage {
   position: sticky; top: 0; height: 100vh; overflow: hidden; display: grid; place-items: center;
   background: #0a0703; transform-origin: 0% 100%; will-change: transform;
