@@ -13,48 +13,40 @@ const reduced = () =>
   window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 /**
- * The entrance: a panel arrives small in the bottom-left corner and grows to
- * full bleed as it climbs into place. Its track carries a -100vh margin, so the
- * whole rise plays over the PREVIOUS section while that one is still pinned —
- * the outgoing scene never moves, the incoming one grows on top of it.
+ * The entrance: the panel sits small on the bottom-left floor and grows to full
+ * bleed over the PREVIOUS scene, which is still pinned beneath it.
+ *
+ * It runs entirely AFTER its own stage has stuck (start "top top") — that is the
+ * whole trick. A stuck panel is motionless in the viewport, so scale, anchored by
+ * transform-origin: 0% 100%, is the only thing moving and the bottom edge never
+ * leaves the floor. Animating it BEFORE it sticks means fighting native scroll:
+ * the browser paints the scroll immediately, GSAP applies the counter-offset a
+ * frame later, and every frame of a fast scroll reads as a jump.
  */
+const RISE = () => `+=${window.innerHeight}`;
+
+/** A scene's own beats begin once the rise is done and the panel is full bleed. */
+const afterRise = () => `top top-=${window.innerHeight}`;
+
 /**
- * A pinned section plays out over its track MINUS a trailing viewport. That tail
- * is the hold: the beats are finished and sitting still while the next panel
- * rises over them. Without it a section is still animating when the next one
- * starts climbing, and neither reads.
+ * A pinned section plays out over its track MINUS the leading rise and a
+ * trailing hold. In the hold its beats sit finished and still while the next
+ * panel grows over them; without it two scenes animate at once, neither reads.
  */
 const holdEnd = (track: HTMLElement | null) => () =>
-  `+=${(track?.offsetHeight ?? 0) - window.innerHeight * 2}`;
+  `+=${(track?.offsetHeight ?? 0) - window.innerHeight * 3}`;
 
-const riseIn = (el: string, trigger: Element | null) => {
-  // the -108% lift pulls the panel into view a viewport early, so it would sit
-  // parked in the corner through the whole hold — fade it in as the rise starts
+const riseIn = (el: string, trigger: Element | null) =>
   gsap.fromTo(
     el,
-    { autoAlpha: 0 },
-    {
-      autoAlpha: 1,
-      ease: "none",
-      scrollTrigger: { trigger, start: "top bottom", end: "top 80%", scrub: true },
-    },
-  );
-
-  return gsap.fromTo(
-    el,
-    // the stage's own bottom edge starts a full viewport BELOW the fold, so the
-    // -108% lift is what keeps the shrunken panel sitting in the visible
-    // bottom-left corner; it unwinds to 0 exactly as the panel reaches full size
-    { scale: 0.3, yPercent: -108 },
+    { scale: 0.3, autoAlpha: 0 },
     {
       scale: 1,
-      yPercent: 0,
+      autoAlpha: 1,
       ease: "none",
-      // lands a hair before the pin so the panel is already full-bleed at handoff
-      scrollTrigger: { trigger, start: "top bottom", end: "top 2%", scrub: true },
+      scrollTrigger: { trigger, start: "top top", end: RISE, scrub: true, invalidateOnRefresh: true },
     },
   );
-};
 
 /* ══ TUNNEL — fly through the center, toward the light ══════════ */
 export function TunnelSection() {
@@ -69,7 +61,7 @@ export function TunnelSection() {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: ref.current,
-          start: "top top",
+          start: afterRise,
           end: holdEnd(ref.current),
           scrub: 1,
           invalidateOnRefresh: true,
@@ -111,14 +103,12 @@ export function TunnelSection() {
 }
 
 /* ══ LIFE — the world returns, vibrant and up close ═════════════
-   Cards clear from blurred/amber to crisp as they reveal. Drop the
-   generated /public/life-*.png files — gradients fall back until then. */
+   Cards clear from blurred/amber to crisp as they reveal. */
 /**
  * Multi-layered parallax illustration scenes. Per scene, three planes:
  *   bg  (depth 0.3, slow)  → /life-<key>-bg.png   — full-bleed environment
- *   mid (depth 0.6)        → /life-<key>-mid.png  — the subject (falls back to /life-<key>.png)
- *   fg  (depth 1, fast)    → /life-<key>-fg.png   — foreground accent crossing the frame
- * Missing files fail silently to gradients — scenes work before assets land.
+ *   mid (depth 0.6)        → /life-<key>-mid.webp  — the subject
+ *   fg  (depth 1, fast)    → /life-<key>-fg.webp   — foreground accent crossing the frame
  */
 const LIFE_SCENES = [
   { key: "book", title: "Reading your book", note: "Every line, exactly where you look" },
@@ -141,28 +131,19 @@ export function LifeSection() {
   useGSAP(
     () => {
       if (reduced()) return;
+      // the panel fades in whole, copy included — an empty white rectangle
+      // growing over the tunnel reads as a glitch
       riseIn(".life-stage", ref.current);
-      // the panel carries its copy up with it — an empty white rectangle rising
-      // over the tunnel reads as a glitch
-      gsap.fromTo(
-        "[data-life-head]",
-        { autoAlpha: 0, y: 40 },
-        {
-          autoAlpha: 1,
-          y: 0,
-          ease: "none",
-          scrollTrigger: { trigger: ref.current, start: "top 82%", end: "top 24%", scrub: true },
-        },
-      );
 
       const scenes = gsap.utils.toArray<HTMLElement>("[data-life-scene]");
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: ref.current,
-          start: "top top",
+          start: afterRise,
           // no hold — nothing rises over life, the page just resumes below it
           end: "bottom bottom",
           scrub: 1,
+          invalidateOnRefresh: true,
         },
       });
 
@@ -229,10 +210,10 @@ export function LifeSection() {
                   className={`life-layer ${l.cls}`}
                   data-depth={l.depth}
                   style={{
-                    backgroundImage:
-                      l.suffix === "mid"
-                        ? `url(/life-${s.key}-mid.webp), url(/life-${s.key}.webp), var(--life-fallback)`
-                        : `url(/life-${s.key}-${l.suffix}.webp)${l.suffix === "bg" ? ", var(--life-fallback)" : ""}`,
+                    // one URL per layer — a background-image list is STACKED, not a
+                    // fallback chain, so every entry gets fetched and a missing one
+                    // 404s on every repaint. The gradient under bg is the only backstop.
+                    backgroundImage: `url(/life-${s.key}-${l.suffix}.webp)${l.suffix === "bg" ? ", var(--life-fallback)" : ""}`,
                   }}
                   role={l.suffix === "mid" ? "img" : undefined}
                   aria-label={l.suffix === "mid" ? s.title : undefined}
