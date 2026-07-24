@@ -289,7 +289,9 @@ img, svg, video { display: block; max-width: 100%; }
 /* ══════════════════════════════════════════════════════════════
    HERO / ACT I — the real room, crisp → wavy amber missing (pinned)
    ══════════════════════════════════════════════════════════════ */
-.hero-track { position: relative; height: 550vh; background: var(--navy); }
+/* +100vh over the animated length: the trailing viewport is the hold where the
+   tunnel rises over the finished, still-pinned room */
+.hero-track { position: relative; height: 650vh; background: var(--navy); }
 .hero-stage { position: sticky; top: 0; height: 100vh; overflow: hidden; perspective: 1200px; }
 
 /* the failing room — full bleed; the camera dollies INTO it on scroll */
@@ -360,8 +362,16 @@ img, svg, video { display: block; max-width: 100%; }
 /* ══════════════════════════════════════════════════════════════
    TUNNEL — fly through the center (pinned)
    ══════════════════════════════════════════════════════════════ */
-.tunnel-track { position: relative; height: 260vh; background: #0a0703; }
-.tunnel-stage { position: sticky; top: 0; height: 100vh; overflow: hidden; display: grid; place-items: center; }
+/* the track is transparent and starts 100vh early: the stage grows in over the
+   still-pinned hero instead of a full-height slab sliding up and covering it */
+/* -200vh: the track reaches the top of the viewport (so the stage STICKS) a full
+   viewport before the previous scene lets go. The rise plays inside that window,
+   on an already-pinned panel — never on one still moving with native scroll. */
+.tunnel-track { position: relative; height: 460vh; margin-top: -200vh; background: transparent; }
+.tunnel-stage {
+  position: sticky; top: 0; height: 100vh; overflow: hidden; display: grid; place-items: center;
+  background: #0a0703; transform-origin: 0% 100%; will-change: transform;
+}
 .tunnel-bg-light {
   position: absolute; inset: 0; opacity: 0;
   background:
@@ -382,8 +392,8 @@ img, svg, video { display: block; max-width: 100%; }
 
 /* reduced motion: both pinned scenes collapse to a single calm frame */
 @media (prefers-reduced-motion: reduce) {
-  .scare-track, .tunnel-track { height: auto; }
-  .scare-stage, .tunnel-stage { position: relative; height: 90vh; }
+  .scare-track, .tunnel-track { height: auto; margin-top: 0; }
+  .scare-stage, .tunnel-stage { position: relative; height: 90vh; transform: none !important; }
   .scare-amber { opacity: 0.6; }
   .scare-copy, .tunnel-copy { opacity: 1 !important; }
   .tunnel-bg-light { opacity: 1; }
@@ -394,9 +404,13 @@ img, svg, video { display: block; max-width: 100%; }
    LIFE — vibrant up-close cards that clear as they reveal
    ══════════════════════════════════════════════════════════════ */
 /* one continuous pinned take: header → scene flows into scene */
-.life-track { position: relative; height: 780vh; background: var(--white); }
-.life-stage { position: sticky; top: 0; height: 100vh; overflow: hidden; display: grid; place-items: center; perspective: 1100px; }
+.life-track { position: relative; height: 880vh; margin-top: -200vh; background: transparent; }
+.life-stage {
+  position: sticky; top: 0; height: 100vh; overflow: hidden; display: grid; place-items: center;
+  perspective: 1100px; background: var(--white); transform-origin: 0% 100%; will-change: transform;
+}
 .life-scene, .life-scenes { transform-style: preserve-3d; }
+.life-scene { transform-origin: 0% 100%; }
 .life-head { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; padding: 1.5rem; z-index: 2; margin: auto; }
 .life-scenes { position: absolute; inset: 0; }
 .life-scene { position: absolute; inset: 0; margin: 0; opacity: 0; will-change: transform, opacity, filter; }
@@ -434,8 +448,8 @@ img, svg, video { display: block; max-width: 100%; }
 
 /* reduced motion: no pin — header then scenes stacked, everything visible */
 @media (prefers-reduced-motion: reduce) {
-  .life-track { height: auto; }
-  .life-stage { position: relative; height: auto; overflow: visible; display: block; padding-block: clamp(4rem, 8vw, 7rem); }
+  .life-track { height: auto; margin-top: 0; }
+  .life-stage { position: relative; height: auto; overflow: visible; display: block; padding-block: clamp(4rem, 8vw, 7rem); transform: none !important; }
   .life-head { position: relative; inset: auto; opacity: 1 !important; margin-bottom: 2.5rem; }
   .life-scenes { position: relative; inset: auto; display: grid; gap: 1.25rem; padding-inline: var(--gutter); max-width: 1180px; margin-inline: auto; }
   .life-scene { position: relative; inset: auto; opacity: 1 !important; height: 60vh; min-height: 380px; border-radius: 22px; overflow: hidden; filter: none !important; transform: none !important; }
