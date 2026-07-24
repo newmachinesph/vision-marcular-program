@@ -12,6 +12,28 @@ const reduced = () =>
   typeof window !== "undefined" &&
   window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+/**
+ * The entrance: a panel arrives small in the bottom-left corner and grows to
+ * full bleed as it climbs into place. Its track carries a -100vh margin, so the
+ * whole rise plays over the PREVIOUS section while that one is still pinned —
+ * the outgoing scene never moves, the incoming one grows on top of it.
+ */
+const riseIn = (el: string, trigger: Element | null) =>
+  gsap.fromTo(
+    el,
+    // the stage's own bottom edge starts a full viewport BELOW the fold, so the
+    // -108% lift is what keeps the shrunken panel sitting in the visible
+    // bottom-left corner; it unwinds to 0 exactly as the panel reaches full size
+    { scale: 0.3, yPercent: -108 },
+    {
+      scale: 1,
+      yPercent: 0,
+      ease: "none",
+      // lands a hair before the pin so the panel is already full-bleed at handoff
+      scrollTrigger: { trigger, start: "top bottom", end: "top 2%", scrub: true },
+    },
+  );
+
 /* ══ TUNNEL — fly through the center, toward the light ══════════ */
 export function TunnelSection() {
   const ref = useRef<HTMLElement>(null);
@@ -20,6 +42,8 @@ export function TunnelSection() {
   useGSAP(
     () => {
       if (reduced()) return;
+      riseIn(".tunnel-stage", ref.current);
+
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: ref.current,
@@ -94,6 +118,20 @@ export function LifeSection() {
   useGSAP(
     () => {
       if (reduced()) return;
+      riseIn(".life-stage", ref.current);
+      // the panel carries its copy up with it — an empty white rectangle rising
+      // over the tunnel reads as a glitch
+      gsap.fromTo(
+        "[data-life-head]",
+        { autoAlpha: 0, y: 40 },
+        {
+          autoAlpha: 1,
+          y: 0,
+          ease: "none",
+          scrollTrigger: { trigger: ref.current, start: "top 82%", end: "top 24%", scrub: true },
+        },
+      );
+
       const scenes = gsap.utils.toArray<HTMLElement>("[data-life-scene]");
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -104,18 +142,17 @@ export function LifeSection() {
         },
       });
 
-      // header settles first, then scene flows into scene — one continuous take
-      tl.fromTo("[data-life-head]", { autoAlpha: 0, y: 40 }, { autoAlpha: 1, y: 0, duration: 0.5 }, 0)
-        .to("[data-life-head]", { autoAlpha: 0, y: -40, duration: 0.5 }, 1.2);
+      // header already arrived with the rise — it just steps aside for the scenes
+      tl.to("[data-life-head]", { autoAlpha: 0, y: -40, duration: 0.5 }, 1.2);
 
       scenes.forEach((scene, i) => {
         const at = 1 + i * 1.5;
-        // scenes FLY IN through real depth — camera catches them mid-air
-        // (no filter here: a filter would flatten the preserve-3d planes)
+        // each image lands the same way the panels do — small in the bottom-left
+        // corner, growing to full bleed
         tl.fromTo(
           scene,
-          { autoAlpha: 0, z: -420 },
-          { autoAlpha: 1, z: 0, ease: "power1.out", duration: 0.8 },
+          { autoAlpha: 0, scale: 0.28 },
+          { autoAlpha: 1, scale: 1, ease: "power2.out", duration: 0.8 },
           at,
         );
         // plane depth: bg sits behind, fg floats in front — true 3D parallax
@@ -125,7 +162,7 @@ export function LifeSection() {
           tl.fromTo(layer, { yPercent: d * 7 }, { yPercent: d * -7, ease: "none", duration: 1.95 }, at);
         });
         if (i < scenes.length - 1) {
-          tl.to(scene, { autoAlpha: 0, z: 260, ease: "power1.in", duration: 0.6 }, at + 1.35);
+          tl.to(scene, { autoAlpha: 0, scale: 1.14, ease: "power1.in", duration: 0.6 }, at + 1.35);
         }
       });
 
