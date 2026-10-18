@@ -1,36 +1,53 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Macular Program marketing site
 
-## Getting Started
+A single-page marketing site for Macular Program, a functional-medicine program for macular degeneration led by Dr. George Rozakis. It tells the story of the HOMING Protocol through a scroll-driven page: hero, a "tunnel" sequence, everyday-life scenes, patient stories, OCT scan comparisons, the doctor, and calls to action. It was built by New Machines as a front-end build for the client.
 
-First, run the development server:
+Stack: Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS 4, GSAP (ScrollTrigger) and Motion.
+
+## What is in it
+
+| Path | Contents |
+|------|----------|
+| `app/layout.tsx` | Site metadata, Open Graph and Twitter tags, `MedicalOrganization` JSON-LD |
+| `app/page.tsx` | The home page, composed from the section components |
+| `app/globals.css` | All styling and design tokens (CSS variables) |
+| `components/site/` | `Nav`, `Hero`, `Spark`, `Orb`, `Scan`, `Reveal`, `Footer`, `journey.tsx` (tunnel, life scenes, reels), `sections.tsx` (need, HOMING, results, testimonials, doctor, compare, guide, final CTA) |
+| `public/` | WebP and PNG imagery for the hero, life scenes and OCT strip |
+
+## How it works
+
+- The hero and the journey scenes are pinned sections animated with GSAP ScrollTrigger. `Spark` is a light that travels the page as you scroll.
+- Motion is gated on `prefers-reduced-motion` and a desktop media query in `Spark`.
+- Content (copy, quotes, statistics) is hard-coded in the components. There is no CMS and no backend.
+- The call-to-action buttons link to `/blueprint` and `/checkout`. Those routes are not implemented in this repository, so those links 404 until they are added.
+- The doctor portrait is an SVG placeholder (see `components/site/sections.tsx`).
+
+## Local development
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev      # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+`AGENTS.md` notes that this Next.js version has breaking changes and points at the docs shipped in `node_modules/next/dist/docs/`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Checks
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run lint     # ESLint (eslint-config-next)
+npm run build    # production build
+```
 
-## Learn More
+There is no test suite.
 
-To learn more about Next.js, take a look at the following resources:
+## Deployment
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+A standard Next.js app with no required environment variables. `app/layout.tsx` sets `SITE_URL` to `https://macularprogram.com` for canonical and Open Graph URLs and references `/og-image.png`, which is not in `public/`. Deploy with `npm run build && npm start`, or on any Next.js host such as Vercel.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Content notice
 
-## Deploy on Vercel
+The copy, statistics, testimonials and imagery belong to the client (Macular Program) and are included to show the build. They are not medical advice.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## License
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+MIT. See [LICENSE](LICENSE).
